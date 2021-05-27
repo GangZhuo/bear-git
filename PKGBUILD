@@ -2,18 +2,19 @@
 # Contributor: Moritz Lipp <mlq@pwmt.org>
 
 pkgname=bear-git
-pkgver=r492.c3c3537
+pkgver=r1008.5d2bd58
 pkgrel=1
 pkgdesc="Tool to generate compilation database for clang tooling"
 arch=('i686' 'x86_64')
 url="https://github.com/rizsotto/Bear"
 license=('GPL3')
-makedepends=('git' 'cmake' 'make' 'pkg-config')
-depends=('python>=2.7')
+makedepends=('git' 'cmake' 'make' 'pkg-config' 'nlohmann-json')
+depends=('grpc' 'fmt' 'spdlog')
 conflicts=('bear')
 provides=('bear')
 source=("${pkgname}::git+https://github.com/rizsotto/Bear.git")
 sha1sums=('SKIP')
+options=(!docs)
 
 pkgver() {
   cd "${pkgname}"
@@ -23,10 +24,11 @@ pkgver() {
 build() {
   cd "${pkgname}"
 
-  cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_SYSCONFDIR=/etc \
-    .
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc \
+        -DENABLE_UNIT_TESTS=OFF \
+        -DENABLE_FUNC_TESTS=OFF \
+        .
 
   make all
 }
